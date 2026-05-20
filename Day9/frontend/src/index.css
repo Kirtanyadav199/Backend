@@ -28,3 +28,11 @@ html{
   max-width: 20rem;
   border-radius: 0.8rem;
 }
+
+.note-create-form{
+  padding-inline: 1rem;
+  padding-block: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  
+}
