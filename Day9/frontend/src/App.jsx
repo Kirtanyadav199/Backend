@@ -1,7 +1,4 @@
 
-
-
-
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
@@ -18,7 +15,7 @@ const App = () => {
 
 
   function fetchNotes(){
-    axios.get("http://localhost:3000/api/notes")
+    axios.get("https://backend-z04q.onrender.com/api/notes")
     .then((res)=>{
       setNotes(res.data.note)
     })
@@ -31,7 +28,7 @@ const App = () => {
 
   function handleSubmit(e){
     e.preventDefault()
-    axios.post("http://localhost:3000/api/notes",{
+    axios.post("https://backend-z04q.onrender.com/api/notes",{
       title:title,
       description:description
     }).then((res)=>{
@@ -45,7 +42,7 @@ const App = () => {
 
   function handleDelete(noteId){
        
-    axios.delete(`http://localhost:3000/api/notes/${noteId}`)
+    axios.delete(`https://backend-z04q.onrender.com/api/notes/${noteId}`)
     .then((res)=>{
       fetchNotes()
     })
@@ -59,7 +56,7 @@ const App = () => {
 
   function saveChanges(){
 
-    axios.patch(`http://localhost:3000/api/notes/${noteid}`,{
+    axios.patch(`https://backend-z04q.onrender.com/api/notes/${noteid}`,{
       title:updateTitle,
       description:updatedescription
     }).then(()=>{
