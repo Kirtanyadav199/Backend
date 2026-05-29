@@ -2,7 +2,7 @@ const followModel = require('../models/follow.model')
 const userModel = require('../models/user.model')
 const mongoose = require('mongoose')
 const asyncHandler = require('express-async-handler')
-const mongoose = require('mongoose')
+
 
 const sendFollowRequestController =   asyncHandler(async (req,res)=>{
 
@@ -114,9 +114,78 @@ const acceptFollowRequestController = asyncHandler(async(req,res)=>{
 
 })
 
+const rejectFollowRequestController = asyncHandler(async(req,res)=>{
+      
+    const requestId = req.params.id
+    const currentUserId = req.user.id
+
+    if(!mongoose.Types.ObjectId.isValid(requestId)){
+        return res.status(400).json({
+            message:"Invalid request Id"
+        })
+    }
+    
+    const request = await followModel.findById(requestId)
+
+    if(!request){
+        return res.status(404).json({
+            message:"Request not found"
+        })
+    }
+
+    if(request.followee.toString() !== currentUserId){
+        return res.status(403).json({
+            message:"Unauthorized"
+        })
+    }
+    
+    if(request.status !== "pending"){
+        return res.status(409).json({
+            message:"Request already handled"
+        })
+    }
+
+    request.status = "rejected"
+
+    await request.save()
+
+    return res.status(200).json({
+        message:"Follow request rejected"
+    })
+})
+
+const unfollowUserController = asyncHandler(async(req,res)=>{
+
+    const followeeId = req.params.id
+    const followerId = req.user.id
+
+    if(!mongoose.Types.ObjectId.isValid(followeeId)){
+        return res.status(400).json({
+            message:"Invalid user Id"
+        })
+    }
+
+    const deletedFollow = await followModel.findOneAndDelete({
+        follower:followerId,
+        followee:followeeId,
+        status:"accepted"
+    })
+    if(!deletedFollow){
+        return res.status(404).json({
+            message:"Follow relationship not found"
+        })
+    }
+     return res.status(200).json({
+        message:"User unfollowed successfully"
+    })
+
+})
+
+
 module.exports={
     sendFollowRequestController,
     getFollowRequestController,
-    acceptFollowRequestController
-   
+    acceptFollowRequestController,
+    rejectFollowRequestController,
+    unfollowUserController
 }
