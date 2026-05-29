@@ -2,13 +2,14 @@ const postModel = require("../models/post.model")
 const ImageKit = require("@imagekit/nodejs")
 const jwt = require('jsonwebtoken')
 const likeModel = require("../models/like.model")
+const asyncHandler = require("express-async-handler")
 
 
 const imagekit = new ImageKit({
     privateKey: process.env.IMAGEKIT_PRIVATE_KEY
 })
 
-async function createPostController(req,res){
+const createPostController =  asyncHandler( async(req,res)=>{
 
    const file = await imagekit.files.upload({
     file: req.file.buffer.toString("base64"),
@@ -28,9 +29,9 @@ async function createPostController(req,res){
     })
 
     res.send(file)
-}
+})
 
-async function getPostController(req,res){
+const getPostController = asyncHandler( async(req,res)=>{
 
    
 
@@ -45,10 +46,10 @@ async function getPostController(req,res){
         posts
     })
    
-}
+})
 
 
-async function getPostDetailsController(req,res){
+const getPostDetailsController = asyncHandler( async(req,res)=>{
 
    
 
@@ -76,10 +77,10 @@ async function getPostDetailsController(req,res){
         post
     })
 
-}
+})
 
 
-async function likePostController(req,res){
+const likePostController = asyncHandler(async(req,res)=>{
 
     const postId = req.params.postId
     const userId = req.user.id
@@ -113,7 +114,7 @@ async function likePostController(req,res){
         like
     })
 
-}
+})
 
 module.exports = {
     createPostController,

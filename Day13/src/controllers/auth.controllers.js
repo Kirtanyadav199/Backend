@@ -1,8 +1,9 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const userModel = require('../models/user.model')
+const asyncHandler = require('express-async-handler')
 
-async function RegisterController(req,res){
+const RegisterController = asyncHandler(async(req,res)=>{
 
     const{username,email,password,bio,profileImage} = req.body
 
@@ -63,10 +64,10 @@ async function RegisterController(req,res){
         profileImage:user.profileImage
     }
   })
-}
+})
 
 
-async function LoginController(req,res){
+const LoginController = asyncHandler( async(req,res)=>{
 
     const {username,email,password} = req.body;
 
@@ -128,7 +129,7 @@ async function LoginController(req,res){
             profileImage:user.profileImage
         }
     })
-}
+})
 
 module.exports = {
     RegisterController,
