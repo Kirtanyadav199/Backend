@@ -10,6 +10,7 @@ const identifyUser = require('../middlewares/auth.middleware')
 
 postRouter.post("/",upload.single("Image"),identifyUser,postController.createPostController)
 postRouter.get("/",identifyUser,postController.getPostController)
+postRouter.get("/feed",identifyUser,postController.getFeedController)
 postRouter.get("/:postId",identifyUser,postController.getPostDetailsController)
 postRouter.post("/like/:postId",identifyUser,postController.likePostController)
 

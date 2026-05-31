@@ -116,10 +116,23 @@ const likePostController = asyncHandler(async(req,res)=>{
 
 })
 
+const getFeedController = asyncHandler(async(req,res)=>{
+
+    
+
+     const posts = await postModel.find().populate("user","username profileImage")
+
+    res.status(200).json({
+        message:"Post fetched successfully",
+        posts
+    })
+})
+
 module.exports = {
     createPostController,
     getPostController,
     getPostDetailsController,
-    likePostController
+    likePostController,
+    getFeedController,
 }
 
