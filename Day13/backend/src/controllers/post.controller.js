@@ -13,7 +13,7 @@ const createPostController =  asyncHandler( async(req,res)=>{
 
    const file = await imagekit.files.upload({
     file: req.file.buffer.toString("base64"),
-    fileName:"test",
+    fileName: req.file.originalname,
     folder:"cohort-2-insta-clone-posts"
    })
     
@@ -117,10 +117,22 @@ const likePostController = asyncHandler(async(req,res)=>{
 })
 
 const getFeedController = asyncHandler(async(req,res)=>{
-
     
+      const user = req.user
 
-     const posts = await postModel.find().populate("user","username profileImage")
+     const posts = await Promise.all((await postModel.find().populate("user","username profileImage")
+     .lean())
+     .map(async(post)=>{
+
+        const isLiked = await likeModel.findOne({
+            user:user.id,
+            post:post._id
+        })
+
+        post.isLiked =Boolean(isLiked)
+
+        return post
+     }))
 
     res.status(200).json({
         message:"Post fetched successfully",
